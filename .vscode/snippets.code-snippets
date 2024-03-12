@@ -1,0 +1,14 @@
+{ 
+	"express fn": {
+		"prefix": "expfn",
+		"body": [
+			"async $1(req: Request<{}, {}, {}, {}>, res: Response) {",
+			"  try {",
+			"   } catch (error) { ",
+			"    console.log(error);",
+			"   }",
+			"}"
+		],
+		"description": "Log output to console"
+	},
+}
