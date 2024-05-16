@@ -4,7 +4,7 @@
     "alwaysStrict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "files": ["src/custom.d.ts"],
 

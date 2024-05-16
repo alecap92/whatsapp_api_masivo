@@ -1,19 +1,21 @@
+import { ref } from "joi";
 import { ObjectId } from "mongodb";
 import { Schema, model } from "mongoose";
 
-const userSchema = new Schema({
+const contactSchema = new Schema({
   phone: {
     type: String,
     required: true,
     unique: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     required: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
   },
   createAt: {
     type: Date,
@@ -25,13 +27,13 @@ const userSchema = new Schema({
   },
 });
 
-export interface User {
+export interface Contact {
   phone: string;
-  password: string;
-  name?: string;
+  name: string;
+  userId?: ObjectId;
   createAt: Date;
   updateAt: Date;
   _id?: ObjectId;
 }
 
-export const UserModel = model("User", userSchema, "users");
+export const ContactModel = model("Contact", contactSchema, "contacts");

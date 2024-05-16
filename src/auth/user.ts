@@ -7,10 +7,10 @@ export enum AuthKeys {
   User = "user",
 }
 
-export async function generateToken(req: Request<{}, {}, User, {}>, res: Response) {
+export async function generateToken(user: User, res: Response) {
   try {
-    const { email, _id, name } = req.body;
-    const token = jwt.sign({ email, _id, name, password: "" }, process.env.JWT_SECRET!);
+    const { phone, _id, name } = user;
+    const token = jwt.sign({ phone, _id, name, password: "" }, process.env.JWT_SECRET!);
     return token;
   } catch (error) {
     console.log(error);

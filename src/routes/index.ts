@@ -1,5 +1,7 @@
 import { Router } from "express";
 import userRoutes from "./user";
+import contactRoutes from "./contact";
+import templateRoutes from "./templates";
 import { verifyToken } from "../auth/user";
 
 const router = Router();
@@ -9,8 +11,10 @@ router.get("/health", (req, res) => {
 });
 
 router.use("/user", userRoutes);
+router.use("/contact", verifyToken, contactRoutes);
+router.use("/template", verifyToken, templateRoutes);
 router.get("/protected", verifyToken, (req, res) => {
-  res.status(200).send("ok");
+  res.status(200).send(req.user);
 });
 
 export default router;

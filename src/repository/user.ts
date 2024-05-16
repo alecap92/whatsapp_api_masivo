@@ -3,6 +3,7 @@ import { User, UserModel } from "../models/user";
 export class UserRepository {
   public async create(user: User) {
     try {
+      console.log(user);
       return await UserModel.create(user);
     } catch (error) {
       console.log(error);
@@ -10,9 +11,9 @@ export class UserRepository {
     }
   }
 
-  public async findByEmail(email: string) {
+  public async findByPhone(phone: string) {
     try {
-      return await UserModel.findOne({ email });
+      return await UserModel.findOne({ phone });
     } catch (error) {
       console.log(error);
       throw new Error(error);
