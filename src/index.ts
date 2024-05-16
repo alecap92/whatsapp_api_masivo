@@ -12,13 +12,14 @@ dbConnect();
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(formidable());
+app.use(express.json());
+app.use(express.urlencoded());
 app.use(cors({ origin: "http://localhost:3001", credentials: true }));
 app.use(cookies());
 
+app.get("/health", (req, res) => {
+  res.status(200).send("ok");
+});
 app.use("/api/v1/", router);
 
 app.listen(process.env.PORT, () => {
