@@ -83,7 +83,7 @@ export class TemplateMassiveServices {
                             phone: row[1],
                         });
                     } catch (error) {
-                        console.error(error.message);
+                        console.error(error);
                         failedMessages.push({
                             name: row[0],
                             phone: row[1],
@@ -108,7 +108,7 @@ export class TemplateMassiveServices {
                             phone: row['Teléfono'].toString(),
                         });
                     } catch (error) {
-                        console.error(error.message);
+                        console.error(error);
                         failedMessages.push({
                             name: row['Nombre'],
                             phone: row['Teléfono'].toString(),
@@ -126,7 +126,7 @@ export class TemplateMassiveServices {
                 failedMessages,
             });
         } catch (error) {
-            console.error(error.message);
+            console.error(error);
             return res.status(400).send("Bad request");
         }
     }

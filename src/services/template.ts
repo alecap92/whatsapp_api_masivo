@@ -17,7 +17,6 @@ export class TemplateServices {
             });
             return res.status(200).send("Messages Sent");
         } catch (error) {
-            console.log("miau");
             return res.status(400).send("Bad request");
         }
     }

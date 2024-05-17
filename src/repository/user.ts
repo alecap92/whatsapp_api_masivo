@@ -3,7 +3,6 @@ import { User, UserModel } from "../models/user";
 export class UserRepository {
   public async create(user: User) {
     try {
-      console.log(user);
       return await UserModel.create(user);
     } catch (error) {
       console.log(error);
