@@ -42,6 +42,7 @@
     PORT=3000
     MONGO_URI=mongodb://localhost:27017/your_db
     JWT_SECRET=your_secret
+    META_URL=https://graph.facebook.com/v18.0/
 
 ```
 
