@@ -43,6 +43,7 @@
     MONGO_URI=mongodb://localhost:27017/your_db
     JWT_SECRET=your_secret
     META_URL=https://graph.facebook.com/v18.0/
+    MAX_NUMBER_OF_MESSAGES=200
 
 ```
 
@@ -144,7 +145,8 @@ To send WhatsApp messages using a template, make a POST request to the `/api/v1/
   "templateName": "Name of the template",
   "key": "Unique access token that you can generate on the whatsapp api configuration on Meta for developers platform",
   "receiverPhones": ["phone1", "phone2", ...],
-  "wsIdentifier": "Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform"
+  "wsIdentifier": "Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform",
+  "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it."
 }
 
 ```
@@ -159,7 +161,8 @@ curl -X POST http://localhost:3000/api/v1/template/send \
     "templateName": "hello_world",
     "key": "TOTALLY SECRET ENCRYPTED KEY",
     "receiverPhones": ["1234567890", "9876543210"],
-    "wsIdentifier": "1123581321"
+    "wsIdentifier": "1123581321",
+    "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it."
   }'
 
 ```
@@ -172,6 +175,7 @@ To send WhatsApp messages in bulk using a file, make a POST request to the `/api
 - `key`: Unique access token that you can generate on the whatsapp api configuration on Meta for developers platform
 - `file`: The Excel (XLS, XLSX) or CSV file containing the message data. The first row must contain column headers: `Name`, `Phone`, `Variable`, followed by the data rows with corresponding values.
 - `wsIdentifier`: Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform
+- `language`: The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it.
 
 The file should have this structure:
 
@@ -193,3 +197,4 @@ curl -X POST http://localhost:3000/api/v1/template/send_massive \
   -F 'key=welcome_template' \
   -F 'file=@/path/to/contacts.xlsx' \
   -F 'wsIdentifier=1123581321'
+  -F 'language=en'

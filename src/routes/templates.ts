@@ -8,7 +8,7 @@ import bodyParser from "body-parser";
 const app = express();
 
 app.use(express.json());
-app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.json({ limit: "20mb" }));
 app.use(express.urlencoded());
 app.use(formidable({ maxFileSize: 20 * 1024 * 1024 }));
 
@@ -18,7 +18,7 @@ const templateMiddleware = new TemplateMiddleware();
 const templateServices = new TemplateServices();
 const templateMassiveServices = new TemplateMassiveServices();
 
-app.post("/send_massive", templateMiddleware.validateTemplateMassive, templateMassiveServices.sendTemplates)
+app.post("/send_massive", templateMiddleware.validateTemplateMassive, templateMassiveServices.sendTemplates);
 
 templateRoutes.post("/send", templateMiddleware.validateTemplate, templateServices.sendTemplates);
 

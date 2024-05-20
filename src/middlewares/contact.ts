@@ -7,8 +7,8 @@ class ContactMiddleware {
   public validateContact(req: Request<{}, {}, Contact[], {}>, res: Response, next: NextFunction) {
     try {
       req.body.map(async (contact) => {
-        let contactExist = await ContactModel.findOne({ phone: contact.phone});
-        contactExist = await ContactModel.findOne({ name: contact.name});
+        let contactExist = await ContactModel.findOne({ phone: contact.phone });
+        contactExist = await ContactModel.findOne({ name: contact.name });
         const { error } = contactValidationSchema.validate(contact);
 
         if (contactExist) {

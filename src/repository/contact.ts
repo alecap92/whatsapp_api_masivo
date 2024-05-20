@@ -22,13 +22,12 @@ export class ContactRepository {
 
   public async findByIds(ids: string[]): Promise<Contact[] | null> {
     try {
-      return await ContactModel.find({ _id: { $in: ids } })
+      return await ContactModel.find({ _id: { $in: ids } });
     } catch (error) {
       console.log(error);
       throw new Error(error);
     }
   }
-  
 
   public async getAllContacts(userId: Types.ObjectId) {
     try {

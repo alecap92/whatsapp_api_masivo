@@ -5,19 +5,24 @@ import { Contact } from "../models/contact";
 import { TemplateRepository } from "../repository/template";
 
 export class TemplateServices {
-    public async sendTemplates(req: Request<{}, {}, Template, {}>, res: Response, next: NextFunction) {
-        try {
+  public async sendTemplates(req: Request<{}, {}, Template, {}>, res: Response, next: NextFunction) {
+    try {
+      const templateRepository = new TemplateRepository();
 
-            const templateRepository = new TemplateRepository();
+      const { receiverPhones } = req.body;
 
-            const { receiverPhones } = req.body;
-
-            receiverPhones.map(async (phone: string) => {
-                await templateRepository.sendMessage(phone, req.body.templateName, req.body.key, req.body.wsIdentifier);
-            });
-            return res.status(200).send("Messages Sent");
-        } catch (error) {
-            return res.status(400).send("Bad request");
-        }
+      receiverPhones.map(async (phone: string) => {
+        await templateRepository.sendMessage(
+          phone,
+          req.body.templateName,
+          req.body.key,
+          req.body.wsIdentifier,
+          req.body.language,
+        );
+      });
+      return res.status(200).send("Messages Sent");
+    } catch (error) {
+      return res.status(400).send("Bad request");
     }
+  }
 }

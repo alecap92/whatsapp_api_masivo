@@ -1,7 +1,13 @@
 import axios from "axios";
 
 export class TemplateRepository {
-  public sendMessage = async (phone: string, templateName: string, key: string, wsIdentifier: string) => {
+  public sendMessage = async (
+    phone: string,
+    templateName: string,
+    key: string,
+    wsIdentifier: string,
+    language: string,
+  ) => {
     const axiosConfig = {
       headers: {
         Authorization: `Bearer ${key}`,
@@ -16,7 +22,7 @@ export class TemplateRepository {
       template: {
         name: templateName,
         language: {
-          code: "en_US",
+          code: language,
         },
       },
     };
@@ -39,6 +45,7 @@ export class TemplateRepository {
     wsIdentifier: string,
     text1: string,
     text2: string,
+    language: string,
   ) => {
     const axiosConfig = {
       headers: {
@@ -53,7 +60,7 @@ export class TemplateRepository {
       template: {
         name: templateName,
         language: {
-          code: "es",
+          code: language,
         },
         components: [
           {
@@ -80,7 +87,7 @@ export class TemplateRepository {
       await axios.post(metaUrl, data, axiosConfig);
       console.log(`Message sent to ${phone}`);
     } catch (error) {
-      console.error(error)
+      console.error("Error on send message with vars");
       throw Error(`Failed to send message to ${phone}: ${error.response?.data.error.message}`);
     }
   };

@@ -3,6 +3,7 @@ export interface Template {
   key: string;
   receiverPhones: string[];
   wsIdentifier: string;
+  language: string;
   createAt: Date;
   updateAt: Date;
 }

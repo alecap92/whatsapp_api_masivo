@@ -11,8 +11,8 @@ router.get("/health", (req, res) => {
 });
 
 router.use("/user", userRoutes);
-router.use("/contact", verifyToken, contactRoutes);
-router.use("/template", verifyToken, templateRoutes);
+router.use("/contact", contactRoutes);
+router.use("/template", templateRoutes);
 router.get("/protected", verifyToken, (req, res) => {
   res.status(200).send(req.user);
 });

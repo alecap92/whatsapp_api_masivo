@@ -5,6 +5,8 @@ export interface TemplateMassive {
   key: string;
   file: RequestHandler;
   wsIdentifier: string;
+  language: string;
+  hasVars: boolean;
   createAt: Date;
   updateAt: Date;
 }

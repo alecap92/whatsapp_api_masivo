@@ -44,7 +44,7 @@ export class UserServices {
       const token = await generateToken(userAux, res);
 
       return res
-        .cookie(AuthKeys.Authorization, token, { httpOnly: true,secure:true, sameSite:'none'})
+        .cookie(AuthKeys.Authorization, token, { httpOnly: true, secure: true, sameSite: "none" })
         .status(200)
         .send({ ...userAux, password: "" });
     } catch (error) {
