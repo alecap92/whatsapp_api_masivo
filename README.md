@@ -175,9 +175,13 @@ To send WhatsApp messages in bulk using a file, make a POST request to the `/api
 - `key`: Unique access token that you can generate on the whatsapp api configuration on Meta for developers platform
 - `file`: The Excel (XLS, XLSX) or CSV file containing the message data. The first row must contain column headers: `Name`, `Phone`, `Variable`, followed by the data rows with corresponding values.
 - `wsIdentifier`: Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform
+- `hasVars`: Boolean to set if the file is gonna have the vars to send a dinamic message, or if they are not, and only gonna send a plain template.
 - `language`: The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it.
 
-The file should have this structure:
+
+---
+
+The file with variables should have this structure:
 
 <div align="center">
 
@@ -186,7 +190,36 @@ The file should have this structure:
 | Name1  | 12312312312   | tex1     |
 | Name2  | 12312031203   | text2    |
 
+<br />
+
+Remember that your template gotta have 2 meta-like template variables.
+The 'name' column will be assigned to the {{1}} variable and the 'variable' column will be assigned to the {{2}} variable respectively.
+
+Remember to not skip the first row with the name, phone and variable or whichever that row would be called, because it will be deleted when parsing the data. Also do not change the order of the data, because the app is expenting the file to have a certain order to work properly.
+
 </div>
+
+
+
+---
+<br />
+The file with no variables should have this structure:
+
+<div align="center">
+<br />
+
+| Phone         |  
+|---------------|
+| 12312312312   |
+| 12312031203   | 
+
+<br />
+
+Remember to not skip the first row with the phone or whichever that row would be called, because it will be deleted when parsing the data.
+
+</div>
+
+---
 
 
 **Example request:**
@@ -196,5 +229,6 @@ curl -X POST http://localhost:3000/api/v1/template/send_massive \
   -F 'templateName=Welcome Template' \
   -F 'key=welcome_template' \
   -F 'file=@/path/to/contacts.xlsx' \
-  -F 'wsIdentifier=1123581321'
+  -F 'wsIdentifier=1123581321' \
+  -F 'hasVars=true' \
   -F 'language=en'
