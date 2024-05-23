@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { Template } from "../models/template";
-import { ContactRepository } from "../repository/contact";
-import { Contact } from "../models/contact";
 import { TemplateRepository } from "../repository/template";
 
 export class TemplateServices {
