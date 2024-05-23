@@ -41,99 +41,11 @@
 
     PORT=3000
     MONGO_URI=mongodb://localhost:27017/your_db
-    JWT_SECRET=your_secret
-    META_URL=https://graph.facebook.com/v18.0/
     MAX_NUMBER_OF_MESSAGES=200
 
 ```
 
 ## Getting Started
-
-Before using the application, you need to register and login.
-
-### Registration
-
-To register a new user, make a POST request to the `/api/v1/user/register` endpoint with the following parameters:
-
-- `name`: The name of the user.
-- `phone`: The phone number of the user.
-- `password`: The password for the user account.
-
-Example request:
-
-```bash
-
-curl -X POST http://localhost:3000/api/v1/user/register \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "name": "John Doe",
-    "phone": "1234567890",
-    "password": "password123"
-  }'
-
-```
-
-## Login
-
-Once registered, you can login using the phone number and password. Once logged in the autorization header should be saved on the cookies
-if they are not disabled.
-
-To login, make a POST request to the `/api/v1/user/login` endpoint with the following parameters:
-
-- `phone`: The phone number of the user.
-- `password`: The password for the user account.
-
-**Example request:**
-
-```bash
-
-curl -X POST http://localhost:3000/api/v1/user/login \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "phone": "1234567890",
-    "password": "password123"
-  }'
-
-```
-
-## Saving Contacts
-
-Contacts should be provided as an array, even if there is only one contact. Each contact should include the `userId` to specify the user it belongs to.
-
-To obtain the `userId`, make a GET request to the `/api/v1/protected` endpoint.
-
-Send a POST request to the `/api/v1/contact/add` endpoint with the following parameters:
-
-  - `userId`: The ID of the user that the contact belongs to.
-  - `name`: The name of the contact.
-  - `phone`: The phone number of the contact.
-
-**Example request with multiple contacts:**
-
-```bash
-
-curl -X POST http://localhost:3000/api/v1/contact/add \
-  -H 'Content-Type: application/json' \
-  -d '{
-    [
-      {"userId": "123456789", "name": "John Doe", "phone": "1234567890"},
-      {"userId": "123456789", "name": "Jane Smith", "phone": "9876543210"}
-    ]
-  }'
-
-```
-
-## Retrieving User Contacts
-
-To get a list of contacts for a user, make a GET request to the `/api/v1/contact/list` endpoint.
-
-**Example request:**
-
-```bash
-
-curl -X GET http://localhost:3000/api/v1/contact/list
-
-```
 
 ## Sending WhatsApp Messages
 
