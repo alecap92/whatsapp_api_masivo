@@ -18,9 +18,9 @@ const templateMiddleware = new TemplateMiddleware();
 const templateServices = new TemplateServices();
 const templateMassiveServices = new TemplateMassiveServices();
 
-app.post("/send_massive", templateMiddleware.validateTemplateMassive, templateMassiveServices.sendTemplates);
 
-templateRoutes.post("/send", templateMiddleware.validateTemplate, templateServices.sendTemplates);
+templateRoutes.post("/json", templateMiddleware.validateTemplate, templateServices.sendTemplates);
+app.post("/file", templateMiddleware.validateTemplateMassive, templateMassiveServices.sendTemplates);
 
 templateRoutes.use(app);
 

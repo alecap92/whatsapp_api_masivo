@@ -49,7 +49,7 @@
 
 ## Sending WhatsApp Messages
 
-To send WhatsApp messages using a template, make a POST request to the `/api/v1/template/send` endpoint with the following request body:
+To send WhatsApp messages using a template, make a POST request to the `/api/v1/template/json` endpoint with the following request body:
 
 ```json
 
@@ -58,7 +58,9 @@ To send WhatsApp messages using a template, make a POST request to the `/api/v1/
   "key": "Unique access token that you can generate on the whatsapp api configuration on Meta for developers platform",
   "receiverPhones": ["phone1", "phone2", ...],
   "wsIdentifier": "Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform",
-  "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it."
+  "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it.",
+  "hasVars": "Is the boolean representing if the request gonna be sent with variables or not"
+  "vars", ["an array os string", "containing the vars that are gonna be sent with the template"]
 }
 
 ```
@@ -67,7 +69,7 @@ To send WhatsApp messages using a template, make a POST request to the `/api/v1/
 
 ```bash
 
-curl -X POST http://localhost:3000/api/v1/template/send \
+curl -X POST http://localhost:3000/api/v1/template/json \
   -H 'Content-Type: application/json' \
   -d '{
     "templateName": "hello_world",
@@ -75,13 +77,15 @@ curl -X POST http://localhost:3000/api/v1/template/send \
     "receiverPhones": ["1234567890", "9876543210"],
     "wsIdentifier": "1123581321",
     "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it."
+    "hasVars": true,
+    "vars": ["var1", "var2"]
   }'
 
 ```
 
 ## Sending WhatsApp Messages in Bulk
 
-To send WhatsApp messages in bulk using a file, make a POST request to the `/api/v1/template/send_massive` endpoint. In the request body, use `multipart/form-data` and include the following fields:
+To send WhatsApp messages in bulk using a file, make a POST request to the `/api/v1/template/file` endpoint. In the request body, use `multipart/form-data` and include the following fields:
 
 - `templateName`: The name of the template to use for the messages.
 - `key`: Unique access token that you can generate on the whatsapp api configuration on Meta for developers platform
@@ -137,7 +141,7 @@ Remember to not skip the first row with the phone or whichever that row would be
 **Example request:**
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/template/send_massive \
+curl -X POST http://localhost:3000/api/v1/template/file \
   -F 'templateName=Welcome Template' \
   -F 'key=welcome_template' \
   -F 'file=@/path/to/contacts.xlsx' \

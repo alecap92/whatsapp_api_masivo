@@ -1,4 +1,10 @@
 import axios from "axios";
+import { response } from "express";
+
+interface metaVarParameters {
+  type: string;
+  text: string;
+}
 
 export class TemplateRepository {
   public sendMessage = async (
@@ -34,6 +40,7 @@ export class TemplateRepository {
       await axios.post(metaUrl, data, axiosConfig);
       console.log(`Message sent to ${phone}`);
     } catch (error) {
+      console.error("Error on send message");
       throw Error(`Failed to send message to ${phone}: ${error.response?.data.error.message}`);
     }
   };
@@ -43,8 +50,7 @@ export class TemplateRepository {
     templateName: string,
     key: string,
     wsIdentifier: string,
-    text1: string,
-    text2: string,
+    vars: string[],
     language: string,
   ) => {
     const axiosConfig = {
@@ -53,6 +59,16 @@ export class TemplateRepository {
         "Content-Type": "application/json",
       },
     };
+
+    let params: metaVarParameters[] = []
+
+    params = vars.map((text) => {
+      return {
+        type: "text",
+        text,
+      };
+    });
+
     const data = {
       messaging_product: "whatsapp",
       to: phone,
@@ -65,16 +81,7 @@ export class TemplateRepository {
         components: [
           {
             type: "body",
-            parameters: [
-              {
-                type: "text",
-                text: text1,
-              },
-              {
-                type: "text",
-                text: text2,
-              },
-            ],
+            parameters: params,
           },
         ],
       },
@@ -84,8 +91,8 @@ export class TemplateRepository {
       if (!metaUrl) {
         throw new Error("META_URL is not defined");
       }
-      await axios.post(metaUrl, data, axiosConfig);
-      console.log(`Message sent to ${phone}`);
+      const request = await axios.post(metaUrl, data, axiosConfig);
+      console.log(`Message sent to ${phone}`, request.data);
     } catch (error) {
       console.error("Error on send message with vars");
       throw Error(`Failed to send message to ${phone}: ${error.response?.data.error.message}`);

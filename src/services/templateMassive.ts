@@ -57,6 +57,7 @@ const sendTemplateWithVars = async (
   res: Response,
   successMessages: contactReceiver[],
   failedMessages: contactReceiver[],
+  errorsList: any[],
   maxNumberOfMessages: number
 ) => {
   const templateRepository = new TemplateRepository();
@@ -75,7 +76,15 @@ const sendTemplateWithVars = async (
       return false;
     }
 
+    const  vars: string[] = []
+
     for (const row of formattedData) {
+
+      vars.length = 0
+  
+      vars.push(row[0])
+      vars.push(row[2])
+
       try {
         await templateRepository.sendMessageWithVars(
           row[1],
@@ -83,8 +92,7 @@ const sendTemplateWithVars = async (
           req.fields?.templateName,
           req.fields?.key,
           req.fields?.wsIdentifier,
-          row[0],
-          row[2],
+          vars,
           req.fields?.language,
         );
         successMessages.push({
@@ -92,11 +100,12 @@ const sendTemplateWithVars = async (
           phone: row[1],
         });
       } catch (error) {
-        console.error(error);
-        failedMessages.push({
-          name: row[0],
-          phone: row[1],
+        errorsList.push({
+          name: getObjectValues(row)[0],
+          phone: getObjectValues(row)[1].toString(),
+          error: error.toString(),
         });
+        console.error(error);
       }
     }
   } else if (fileExtension.includes("excel") || fileExtension.includes("xml")) {
@@ -106,6 +115,12 @@ const sendTemplateWithVars = async (
       return false;
     }
     for (const row of convertedData) {
+
+      const vars: any[] = []
+
+      vars.push(getObjectValues(row)[0])
+      vars.push(getObjectValues(row)[2].toString())
+
       try {
         await templateRepository.sendMessageWithVars(
           getObjectValues(row)[1].toString(),
@@ -113,8 +128,7 @@ const sendTemplateWithVars = async (
           req.fields?.templateName,
           req.fields?.key,
           req.fields?.wsIdentifier,
-          getObjectValues(row)[0],
-          getObjectValues(row)[2],
+          vars,
           req.fields?.language,
         );
         successMessages.push({
@@ -122,11 +136,12 @@ const sendTemplateWithVars = async (
           phone: getObjectValues(row)[1].toString(),
         });
       } catch (error) {
-        console.error(error);
-        failedMessages.push({
+        errorsList.push({
           name: getObjectValues(row)[0],
           phone: getObjectValues(row)[1].toString(),
+          error: error.toString(),
         });
+        console.error(error);
       }
     }
   } else {
@@ -142,6 +157,7 @@ const sendTemplateNoVars = async (
   res: Response,
   successMessages: contactReceiver[],
   failedMessages: contactReceiver[],
+  errorsList: any[],
   maxNumberOfMessages: number
 ) => {
   const templateRepository = new TemplateRepository();
@@ -175,10 +191,11 @@ const sendTemplateNoVars = async (
           phone: row[0],
         });
       } catch (error) {
-        console.error(error);
-        failedMessages.push({
-          phone: row[0],
+        errorsList.push({
+          phone: getObjectValues(row)[1].toString(),
+          error: error.toString(),
         });
+        console.error(error);
       }
     }
   } else if (fileExtension.includes("excel") || fileExtension.includes("xml")) {
@@ -201,10 +218,12 @@ const sendTemplateNoVars = async (
           phone: getObjectValues(row)[0].toString(),
         });
       } catch (error) {
-        console.error(error);
-        failedMessages.push({
-          phone: getObjectValues(row)[0].toString(),
+        errorsList.push({
+          name: getObjectValues(row)[0],
+          phone: getObjectValues(row)[1].toString(),
+          error: error.toString(),
         });
+        console.error(error);
       }
     }
   } else {
@@ -220,6 +239,7 @@ export class TemplateMassiveServices {
     try {
       const successMessages: contactReceiver[] = [];
       const failedMessages: contactReceiver[] = [];
+      const errorsList: any[] = [];
 
       const hasVars = req.fields?.hasVars ?? {};
 
@@ -227,8 +247,8 @@ export class TemplateMassiveServices {
 
       const success =
         hasVars === "true"
-          ? await sendTemplateWithVars(req, res, successMessages, failedMessages, maxNumberOfMessages)
-          : await sendTemplateNoVars(req, res, successMessages, failedMessages, maxNumberOfMessages);
+          ? await sendTemplateWithVars(req, res, successMessages, failedMessages, errorsList, maxNumberOfMessages)
+          : await sendTemplateNoVars(req, res, successMessages, failedMessages, errorsList, maxNumberOfMessages);
 
       if (!success) {
         return;
@@ -236,13 +256,14 @@ export class TemplateMassiveServices {
 
       return res.status(200).json({
         messagesSent: successMessages.length,
-        messagesFailed: failedMessages.length,
+        messagesFailed: errorsList.length,
         successMessages,
-        failedMessages,
+        errorsList,
       });
     } catch (error) {
-      console.error(error);
-      return res.status(400).send("Bad request");
+      const currentDate = new Date();
+      console.error(`Error at masive template sender service at ${currentDate}`,error);
+      return res.status(500).send(`Internal server error: ${error}`);
     }
   }
 }

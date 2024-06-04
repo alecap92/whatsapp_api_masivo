@@ -1,4 +1,8 @@
-import { templateMassiveValidationSchema, templateValidationSchema } from "../validationSchemas/template";
+import {
+  templateMassiveValidationSchema,
+  templateValidationSchema,
+  templateValidationSchemaWithVars,
+} from "../validationSchemas/template";
 import { TemplateMassive } from "../models/templateMassive";
 import { Request, Response, NextFunction } from "express";
 import { Template } from "../models/template";
@@ -6,14 +10,16 @@ import { Template } from "../models/template";
 class TemplateMiddleware {
   public validateTemplate(req: Request<{}, {}, Template, {}>, res: Response, next: NextFunction) {
     try {
-      const { error } = templateValidationSchema.validate(req.body);
+      const { error } = req.body.hasVars
+        ? templateValidationSchemaWithVars.validate(req.body)
+        : templateValidationSchema.validate(req.body)
       if (error) {
         return res.status(400).json({ error: error.details[0].message });
       }
       next();
     } catch (error) {
       console.error(error);
-      return res.status(400).send("Bad request");
+      throw new Error(error);
     }
   }
 
@@ -32,7 +38,7 @@ class TemplateMiddleware {
       next();
     } catch (error) {
       console.error(error);
-      return res.status(400).send("Bad request");
+      throw new Error(error);
     }
   }
 }
