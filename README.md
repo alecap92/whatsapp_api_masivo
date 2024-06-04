@@ -49,7 +49,9 @@
 
 ## Sending WhatsApp Messages
 
-To send WhatsApp messages using a template, make a POST request to the `/api/v1/template/json` endpoint with the following request body:
+To send WhatsApp messages using a template, make a POST request to the `/api/v1/template/json` endpoint with the following request body.
+
+You should be aware of a property called "hasVars" that is a boolean that in case that is false the request should have this structure:
 
 ```json
 
@@ -59,13 +61,66 @@ To send WhatsApp messages using a template, make a POST request to the `/api/v1/
   "receiverPhones": ["phone1", "phone2", ...],
   "wsIdentifier": "Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform",
   "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it.",
-  "hasVars": "Is the boolean representing if the request gonna be sent with variables or not"
+  "hasVars": "Is the boolean representing if the request gonna be sent with variables or not, here should be 'false' "
+  "vars", ["an array os string", "containing the vars that are gonna be sent with the template"]
+}
+
+```
+
+in case that the property called "hasVars" is true, the request should be like this:
+
+```json
+
+{
+  "templateName": "Name of the template",
+  "key": "Unique access token that you can generate on the whatsapp api configuration on Meta for developers platform",
+  "receiverPhonesWithVars": [
+  {
+      "phone": "12345678",
+      "vars": ["var1", "var2", ...]
+  },
+  {
+      "phone": "87654321",
+      "vars": ["var1", "var2", ...]
+  }
+  ],
+  "wsIdentifier": "Identifier for the WhatsApp Number sender that you can also get on the Meta for developers platform",
+  "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it.",
+  "hasVars": "Is the boolean representing if the request gonna be sent with variables or not, here should be 'true' "
   "vars", ["an array os string", "containing the vars that are gonna be sent with the template"]
 }
 
 ```
 
 **Example request:**
+
+In case "hasVars" is true
+
+```bash
+
+curl -X POST http://localhost:3000/api/v1/template/json \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "templateName": "hello_world",
+    "key": "TOTALLY SECRET ENCRYPTED KEY",
+    "receiverPhonesWithVars": [
+     {
+         "phone": "12345678",
+         "vars": ["var1", "var2", ...]
+     },
+     {
+          "phone": "87654321",
+        "vars": ["var1", "var2", ...]
+     }
+     ],
+    "wsIdentifier": "1123581321",
+    "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it."
+    "hasVars": true,
+  }'
+
+```
+
+In case "hasVars" is false
 
 ```bash
 
@@ -77,11 +132,12 @@ curl -X POST http://localhost:3000/api/v1/template/json \
     "receiverPhones": ["1234567890", "9876543210"],
     "wsIdentifier": "1123581321",
     "language": "The language in which the template is formated, could be 'en' or 'es' depending on your region or how you decided to set it."
-    "hasVars": true,
-    "vars": ["var1", "var2"]
+    "hasVars": false,
   }'
 
 ```
+
+
 
 ## Sending WhatsApp Messages in Bulk
 
